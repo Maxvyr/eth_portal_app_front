@@ -9,6 +9,39 @@ export default function App() {
   const [currentAccount, setCurrentAccount] = useState("");
   const contractAddress = "0xd145227f17e9dBCd44726AE4C1A6750716F23D95";
   const contractABI = abi.abi; //recover all param from json file
+  const [allWaves, setAllWaves] = useState([]);
+  const [inputValue, setInputValue] = useState("");
+
+  const getAllWaves = async () => {
+    try {
+      const { ethereum } = window;
+
+      if(ethereum){
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
+        //call method contract allWaves
+        const waves = await wavePortalContract.getAllWaves();
+
+        let wavesCleaned = [];
+        waves.forEach(wave => {
+          wavesCleaned.push({
+            address: wave.waver,
+            timestamp: new Date(wave.timestamp * 1000),
+            message: wave.message
+          });
+        });
+
+        //store new value
+        setAllWaves(wavesCleaned);
+      } else {
+        console.log("Ethereum Object doesn't exist!")
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
 
   const checkIfWalletIsConnected = async () => {
     try {
@@ -55,8 +88,13 @@ export default function App() {
 
   //run function load page
   useEffect(() => {
-    checkIfWalletIsConnected();
-  }, [])
+    const onLoad = async () => {
+      await checkIfWalletIsConnected();
+      await getAllWaves();
+    };
+    window.addEventListener('load', onLoad);
+    return () => window.removeEventListener('load', onLoad);
+  }, [getAllWaves])
 
   const wave = async () => {
     try {
@@ -70,7 +108,7 @@ export default function App() {
         console.log("Retrieved total wave count...", count.toNumber());
 
         //call wave method - write in the blockchain
-        const waveTxn = await wavePortalContract.wave();
+        const waveTxn = await wavePortalContract.wave(inputValue ?? "Oups");
         console.log("Mining...", waveTxn.hash); //for find transaction with the hash on etherscan
 
         await waveTxn.wait();
@@ -86,6 +124,12 @@ export default function App() {
       console.log(err)
     }
   }
+
+  const onInputChange = (event) => {
+    // recover value inside input and call useEffect
+    const { value }= event.target;
+    setInputValue(value);
+  }
   
   return (
     <div className="mainContainer">
@@ -98,16 +142,34 @@ export default function App() {
         <div className="bio">
         Web App on web 3 made with react + solidity
         </div>
-
-        <button className="waveButton" onClick={wave}>
-          Wave at Me
-        </button>
+        <div className="input-container"> 
+        <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              console.log("value", inputValue);
+              wave()
+            }}
+          >
+            <input type="text" placeholder="Enter yout Wave" value={inputValue} onChange={onInputChange}/>
+            <button type="submit" className="waveButton">Wave at Me</button>
+          </form>
+          </div>
         {/* if no current wallet connect */}
         {!currentAccount && (
           <button className="waveButton" onClick={connectWallet}>
             Connect Wallet
           </button>
         )}
+
+        {allWaves.map((wave, index) => {
+          return (
+            <div key={index} style={{ backgroundColor: "OldLace", marginTop: "16px", padding: "8px" }}>
+              <div>Address: {wave.address}</div>
+              <div>Address: {wave.timestamp.toString()}</div>
+              <div>Address: {wave.message}</div>
+              </div>
+          )
+        })}
       </div>
     </div>
   );
