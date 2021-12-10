@@ -7,7 +7,7 @@ import abi from "./utils/WavePortal.json"
 export default function App() {
   //variable for save current user account
   const [currentAccount, setCurrentAccount] = useState("");
-  const contractAddress = "0xFe1E2790398239438AB06F78336C34C26eD6Fd1f";
+  const contractAddress = "0xBC7878eB76d273E9Ef1782F4d40F37f342E66473";
   const contractABI = abi.abi; //recover all param from json file
 
   const checkIfWalletIsConnected = async () => {
