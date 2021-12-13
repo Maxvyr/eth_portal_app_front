@@ -7,7 +7,7 @@ import abi from "./utils/WavePortal.json"
 export default function App() {
   //variable for save current user account
   const [currentAccount, setCurrentAccount] = useState("");
-  const contractAddress = "0xcf08E86a44BA0e5D6C0BA4bab3c5C169b1d01f00";
+  const contractAddress = "0x5840a2cB3aBc6bbb241af69a2De685eA21e4922B";
   const contractABI = abi.abi; //recover all param from json file
   const [allWaves, setAllWaves] = useState([]);
   const [inputValue, setInputValue] = useState("");
