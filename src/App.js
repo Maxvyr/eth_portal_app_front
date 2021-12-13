@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from "react";
 import { ethers } from "ethers"; //library for discuss with the contract
 import './App.css';
@@ -7,15 +8,14 @@ import abi from "./utils/WavePortal.json"
 export default function App() {
   //variable for save current user account
   const [currentAccount, setCurrentAccount] = useState("");
-  const contractAddress = "0x5840a2cB3aBc6bbb241af69a2De685eA21e4922B";
+  const contractAddress = "0xA25eF4774ac25DBFb7569a36DE4d8E7910Ee3360";
   const contractABI = abi.abi; //recover all param from json file
   const [allWaves, setAllWaves] = useState([]);
   const [inputValue, setInputValue] = useState("");
 
   const getAllWaves = async () => {
+    const { ethereum } = window;
     try {
-      const { ethereum } = window;
-
       if(ethereum){
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
@@ -23,13 +23,12 @@ export default function App() {
         //call method contract allWaves
         const waves = await wavePortalContract.getAllWaves();
 
-        let wavesCleaned = [];
-        waves.forEach(wave => {
-          wavesCleaned.push({
+        const wavesCleaned = waves.map(wave => {
+          return {
             address: wave.waver,
             timestamp: new Date(wave.timestamp * 1000),
-            message: wave.message
-          });
+            message: wave.message,
+          };
         });
 
         //store new value
@@ -87,14 +86,43 @@ export default function App() {
   }
 
   //run function load page
+  // useEffect(() => {
+  //   const onLoad = async () => {
+  //     await checkIfWalletIsConnected();
+  //     await getAllWaves();
+  //   };
+  //   window.addEventListener('load', onLoad);
+  //   return () => window.removeEventListener('load', onLoad);
+  // }, [getAllWaves])
   useEffect(() => {
-    const onLoad = async () => {
-      await checkIfWalletIsConnected();
-      await getAllWaves();
+    let wavePortalContract;
+
+    const onNewWave = (from, timestamp, message) => {
+      console.log("NewWave", from, timestamp, message);
+      setAllWaves(prevState => [
+        ...prevState,
+        {
+          address : from,
+          timestamp : new Date(timestamp * 1000),
+          message : message,
+        }
+      ]);
     };
-    window.addEventListener('load', onLoad);
-    return () => window.removeEventListener('load', onLoad);
-  }, [getAllWaves])
+
+    if(window.ethereum){
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+
+      wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
+      wavePortalContract.on('NewWave', onNewWave);
+    }
+
+    return () => {
+      if(wavePortalContract){
+        wavePortalContract.off('NewWave', onNewWave);
+      }
+    }
+  }, []);
 
   const wave = async () => {
     try {
@@ -108,7 +136,7 @@ export default function App() {
         console.log("Retrieved total wave count...", count.toNumber());
 
         //call wave method - write in the blockchain
-        const waveTxn = await wavePortalContract.wave(inputValue ?? "Oups");
+        const waveTxn = await wavePortalContract.wave(inputValue ?? "Oups", {gasLimit: 300000});
         console.log("Mining...", waveTxn.hash); //for find transaction with the hash on etherscan
 
         await waveTxn.wait();
