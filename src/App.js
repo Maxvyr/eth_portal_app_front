@@ -8,7 +8,7 @@ import abi from "./utils/WavePortal.json"
 export default function App() {
   //variable for save current user account
   const [currentAccount, setCurrentAccount] = useState("");
-  const contractAddress = "0x7CDd9e067852680b28616E6Ed864b70c231C3863";
+  const contractAddressEth = "0x292F9A040cF13fFEAB768747B36167CDb9a6f7C8";
   const contractABI = abi.abi; //recover all param from json file
   const [allWaves, setAllWaves] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -19,7 +19,7 @@ export default function App() {
       if(ethereum){
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
-        const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
+        const wavePortalContract = new ethers.Contract(contractAddressEth, contractABI, signer);
         //call method contract allWaves
         const waves = await wavePortalContract.getAllWaves();
 
@@ -113,7 +113,7 @@ export default function App() {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
 
-      wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
+      wavePortalContract = new ethers.Contract(contractAddressEth, contractABI, signer);
       wavePortalContract.on('NewWave', onNewWave);
     }
 
@@ -130,7 +130,7 @@ export default function App() {
       if(ethereum){
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
-        const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
+        const wavePortalContract = new ethers.Contract(contractAddressEth, contractABI, signer);
 
         let count = await wavePortalContract.getTotalWaves();
         console.log("Retrieved total wave count...", count.toNumber());
