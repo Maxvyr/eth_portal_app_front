@@ -1,11 +1,15 @@
-# buildspace Wave Portal 👋 
+# COMING SOON
 
-### **Welcome!**
-To get started with this course, clone this repo and follow these commands:
+<a href="https://gitmoji.dev">
+  <img src="https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg?style=flat-square" alt="Gitmoji">
+</a>
 
-1. Run `npm install` at the root of your directory
-2. Run `npm run start` to start the project
-3. Start coding!
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/A0A72UVP8)
 
-### **Questions?**
-Have some questions make sure you head over to your [buildspace Dashboard](https://app.buildspace.so/courses/CO02cf0f1c-f996-4f50-9669-cf945ca3fb0b) and link your Discord account so you can get access to helpful channels and your instructor!
+## Crypto Tips
+
+![https://i.imgur.com/wuW30D4.png](https://i.imgur.com/wuW30D4.png)
+
+## Contact Me
+
+contact : [pandamydev@gmail.com](mailto:pandamydev@gmail.com)
