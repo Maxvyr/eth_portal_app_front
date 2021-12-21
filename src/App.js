@@ -85,15 +85,6 @@ export default function App() {
     }
   }
 
-  //run function load page
-  // useEffect(() => {
-  //   const onLoad = async () => {
-  //     await checkIfWalletIsConnected();
-  //     await getAllWaves();
-  //   };
-  //   window.addEventListener('load', onLoad);
-  //   return () => window.removeEventListener('load', onLoad);
-  // }, [getAllWaves])
   useEffect(() => {
     let wavePortalContract;
 
@@ -182,6 +173,7 @@ export default function App() {
             <button type="submit" className="waveButton">Wave at Me</button>
           </form>
           </div>
+          <div className="sized-box"></div>
         {/* if no current wallet connect */}
         {!currentAccount && (
           <button className="waveButton" onClick={connectWallet}>
