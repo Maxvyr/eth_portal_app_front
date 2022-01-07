@@ -8,7 +8,7 @@ import abi from "./utils/WavePortal.json"
 export default function App() {
   //variable for save current user account
   const [currentAccount, setCurrentAccount] = useState("");
-  const contractAddressEth = "0x292F9A040cF13fFEAB768747B36167CDb9a6f7C8";
+  const contractAddressEth = "0x23A2c44c1a7f735E4F1069EB9CF5FdBf719d9AAF";
   const contractABI = abi.abi; //recover all param from json file
   const [allWaves, setAllWaves] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -159,7 +159,7 @@ export default function App() {
         </div>
 
         <div className="bio">
-        Web App on web 3 made with react + solidity
+        Web App on web 3 made with react + solidity and turn on top of Aurora Network (testnet) 
         </div>
         <div className="input-container"> 
         <form
